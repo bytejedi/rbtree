@@ -5,6 +5,8 @@ type Iterator func(i Item) bool
 // Ascend will call iterator once for each element greater or equal than pivot
 // in ascending order. It will stop whenever the iterator returns false.
 func (t *Rbtree) Ascend(pivot Item, iterator Iterator) {
+	t.mu.RLock()
+	defer t.mu.RUnlock()
 	t.ascend(t.root, pivot, iterator)
 }
 
@@ -28,6 +30,8 @@ func (t *Rbtree) ascend(x *Node, pivot Item, iterator Iterator) bool {
 // Descend will call iterator once for each element less or equal than pivot
 // in descending order. It will stop whenever the iterator returns false.
 func (t *Rbtree) Descend(pivot Item, iterator Iterator) {
+	t.mu.RLock()
+	defer t.mu.RUnlock()
 	t.descend(t.root, pivot, iterator)
 }
 
@@ -52,6 +56,8 @@ func (t *Rbtree) descend(x *Node, pivot Item, iterator Iterator) bool {
 // and less than @lt, which means the range would be [ge, lt).
 // It will stop whenever the iterator returns false.
 func (t *Rbtree) AscendRange(ge, lt Item, iterator Iterator) {
+	t.mu.RLock()
+	defer t.mu.RUnlock()
 	t.ascendRange(t.root, ge, lt, iterator)
 }
 

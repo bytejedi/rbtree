@@ -5,9 +5,15 @@ package rbtree
 // the rbtree, this is the right place.
 
 // Number of nodes in the tree.
-func (t *Rbtree) Len() uint { return t.count }
+func (t *Rbtree) Len() uint {
+	t.mu.RLock()
+	defer t.mu.RUnlock()
+	return t.count
+}
 
 func (t *Rbtree) Insert(item Item) {
+	t.mu.Lock()
+	defer t.mu.Unlock()
 	if item == nil {
 		return
 	}
@@ -21,6 +27,8 @@ func (t *Rbtree) Insert(item Item) {
 //If the item is not in the tree the return value will be the item
 //you put in.
 func (t *Rbtree) InsertOrGet(item Item) Item {
+	t.mu.Lock()
+	defer t.mu.Unlock()
 	if item == nil {
 		return nil
 	}
@@ -29,6 +37,8 @@ func (t *Rbtree) InsertOrGet(item Item) Item {
 }
 
 func (t *Rbtree) Delete(item Item) Item {
+	t.mu.Lock()
+	defer t.mu.Unlock()
 	if item == nil {
 		return nil
 	}
@@ -38,6 +48,8 @@ func (t *Rbtree) Delete(item Item) Item {
 }
 
 func (t *Rbtree) Get(item Item) Item {
+	t.mu.RLock()
+	defer t.mu.RUnlock()
 	if item == nil {
 		return nil
 	}
@@ -51,13 +63,9 @@ func (t *Rbtree) Get(item Item) Item {
 	return ret.Item
 }
 
-//TODO: This is for debug, delete it in the future
-func (t *Rbtree) Search(item Item) *Node {
-
-	return t.search(&Node{t.NIL, t.NIL, t.NIL, RED, item})
-}
-
 func (t *Rbtree) Min() Item {
+	t.mu.RLock()
+	defer t.mu.RUnlock()
 	x := t.min(t.root)
 
 	if x == t.NIL {
@@ -68,6 +76,8 @@ func (t *Rbtree) Min() Item {
 }
 
 func (t *Rbtree) Max() Item {
+	t.mu.RLock()
+	defer t.mu.RUnlock()
 	x := t.max(t.root)
 
 	if x == t.NIL {

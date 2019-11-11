@@ -1,6 +1,8 @@
 // Package rbtree implements operations on Red-Black tree.
 package rbtree
 
+import "sync"
+
 //
 // Red-Black tree properties:  http://en.wikipedia.org/wiki/Rbtree
 //
@@ -32,6 +34,7 @@ type Item interface {
 
 // Rbtree represents a Red-Black tree.
 type Rbtree struct {
+	mu    sync.RWMutex
 	NIL   *Node
 	root  *Node
 	count uint
