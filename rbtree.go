@@ -24,8 +24,8 @@ type Node struct {
 }
 
 const (
-	RED   = 0
-	BLACK = 1
+	RED = iota
+	BLACK
 )
 
 type Item interface {
